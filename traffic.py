@@ -95,23 +95,23 @@ def get_model():
         layers.BatchNormalization(),
         layers.Conv2D(32, 3, activation='relu', padding='same'),
         layers.MaxPooling2D(),
-        layers.Dropout(0.25),
+        # layers.Dropout(0.25),
 
         layers.Conv2D(64, 3, activation='relu', padding='same'),
         layers.BatchNormalization(),
         layers.Conv2D(64, 3, activation='relu', padding='same'),
         layers.MaxPooling2D(),
-        layers.Dropout(0.25),
+        # layers.Dropout(0.25),
 
         layers.Conv2D(128, 3, activation='relu', padding='same'),
         layers.BatchNormalization(),
         layers.MaxPooling2D(),
-        layers.Dropout(0.4),
+        # layers.Dropout(0.4),
 
         layers.Flatten(),
         layers.Dense(256, activation='relu'),
         layers.BatchNormalization(),
-        layers.Dropout(0.5),
+        # layers.Dropout(0.5),
         layers.Dense(NUM_CATEGORIES, activation='softmax')
     ])
     model.compile(
