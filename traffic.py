@@ -21,7 +21,7 @@ def main():
 
     # Get image arrays and labels for all image files
     images, labels = load_data(sys.argv[1])
-
+    
     # Split data into training and testing sets
     labels = tf.keras.utils.to_categorical(labels)
     x_train, x_test, y_train, y_test = train_test_split(
@@ -58,7 +58,7 @@ def load_data(data_dir):
     be a list of integer labels, representing the categories for each of the
     corresponding `images`.
     """
-    images = [],
+    images = []
     labels = [] 
     for category in range(NUM_CATEGORIES):
         folder = os.path.join(data_dir,str(category))
@@ -90,7 +90,7 @@ def get_model():
     The output layer should have `NUM_CATEGORIES` units, one for each category.
     """
     model = tf.keras.Sequential([
-        layers.Input(IMG_WIDTH,IMG_HEIGHT,3),
+        layers.Input(shape=(IMG_WIDTH,IMG_HEIGHT,3)),
         layers.Conv2D(32, 3, activation='relu', padding='same'),
         layers.BatchNormalization(),
         layers.Conv2D(32, 3, activation='relu', padding='same'),
@@ -114,6 +114,12 @@ def get_model():
         layers.Dropout(0.5),
         layers.Dense(NUM_CATEGORIES, activation='softmax')
     ])
+    model.compile(
+    optimizer='adam',
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+    )
+
     return model
 
 
