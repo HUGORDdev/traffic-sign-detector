@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Reconnaissance de panneau</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f4f4f9; }
+    .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    button { margin-top: 10px; padding: 10px; width: 100%; border: none; background: #0066ff; color: white; border-radius: 6px; cursor: pointer; }
+    img { margin-top: 10px; width: 100%; border-radius: 6px; }
+    .result { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Reconnaissance de panneau 🚦</h2>
+    <input type="file" id="fileInput" accept="image/*">
+    <button onclick="sendImage()">Analyser</button>
+
+    <img id="preview" src="" alt="Aperçu de l’image" style="display:none;">
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    async function sendImage() {
+      const fileInput = document.getElementById("fileInput");
+      const resultDiv = document.getElementById("result");
+      const preview = document.getElementById("preview");
+
+      if (!fileInput.files.length) {
+        resultDiv.innerText = "⚠️ Choisis une image d’abord.";
+        return;
+      }
+
+      const file = fileInput.files[0];
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = "block";
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      resultDiv.innerText = "Analyse en cours...";
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/predict", {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) throw new Error("Erreur de l'API");
+
+        const data = await response.json();
+        resultDiv.innerHTML = `
+          Type : ${data.type}<br>
+           Description : ${data.description}
+        `;
+      } catch (error) {
+        resultDiv.innerText = "Erreur : " + error.message;
+      }
+    }
+  </script>
+</body>
+</html>
